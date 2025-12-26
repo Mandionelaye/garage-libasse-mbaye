@@ -18,7 +18,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[1, 2, 3].map((i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className="p-6">
@@ -32,7 +32,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">

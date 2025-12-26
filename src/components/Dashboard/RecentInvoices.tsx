@@ -64,10 +64,10 @@ export const RecentInvoices: React.FC<RecentInvoicesProps> = ({
             invoices.map((invoice) => (
               <div
                 key={invoice.id}
-                className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-medium text-gray-900">
                       Facture #{invoice.invoiceNumber}
                     </span>
@@ -100,7 +100,7 @@ export const RecentInvoices: React.FC<RecentInvoicesProps> = ({
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center self-end sm:self-center gap-2 mt-2 sm:mt-0">
                   <button
                     onClick={() => onViewInvoice(invoice)}
                     className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors"

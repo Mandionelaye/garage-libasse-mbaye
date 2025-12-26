@@ -100,22 +100,23 @@ const ViewInvoice: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Actions */}
         <div className="mb-6 no-print">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center sm:justify-between gap-2">
             <button
               onClick={() => navigate('/')}
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
             >
               <ArrowLeft className="w-4 h-4" />
-              Retour au tableau de bord
+              <span className="hidden md:inline">Retour au tableau de bord</span>
+              <span className="md:hidden">Retour</span>
             </button>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap justify-start sm:justify-end">
               <button
                 onClick={handlePrint}
                 className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 inline-flex items-center gap-2"
               >
                 <Printer className="w-4 h-4" />
-                Imprimer
+                <span className="hidden sm:inline">Imprimer</span>
               </button>
               
               <button
@@ -123,7 +124,7 @@ const ViewInvoice: React.FC = () => {
                 className="px-3 py-2 border border-gray-300 rounded hover:bg-gray-50 inline-flex items-center gap-2"
               >
                 <Edit className="w-4 h-4" />
-                Modifier
+                <span className="hidden sm:inline">Modifier</span>
               </button>
               
               <div onClick={(e) => e.stopPropagation()}>
@@ -145,17 +146,15 @@ const ViewInvoice: React.FC = () => {
           <CardContent className="p-0">
             {/* Top Gray Diagonal Banner */}
             <div className="relative bg-white">
-              {/* <div className="absolute top-0 left-0 w-full h-32 bg-gray-400 origin-top-left transform -skew-y-3"></div> */}
-              
               {/* Header Content */}
-              <div className="relative z-10 px-8 pt-8 pb-6">
-                <div className="flex items-start justify-between">
+              <div className="relative z-10 px-4 sm:px-8 pt-8 pb-6">
+                <div className="flex flex-col-reverse sm:flex-row items-start justify-between gap-4">
                   {/* Left: FACTURE Title */}
                   <div>
-                    <h1 className="text-4xl font-bold text-black mb-2">FACTURE</h1>
-                    <p className="text-sm text-black">N° de facture : {invoice.invoiceNumber}</p>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-black mb-2">FACTURE</h1>
+                    <p className="text-sm text-black">N° : {invoice.invoiceNumber}</p>
                     <p className="text-sm text-black">
-                      Date de facturation : {format(typeof invoice.date === 'string'
+                      Date : {format(typeof invoice.date === 'string'
                           ? new Date(invoice.date)
                           : invoice.date && 'toDate' in invoice.date
                           ? invoice.date.toDate()
@@ -164,9 +163,9 @@ const ViewInvoice: React.FC = () => {
                   </div>
                   
                   {/* Right: Logo and Company Info */}
-                  <div className="text-right">
+                  <div className="text-left sm:text-right w-full sm:w-auto">
                     <div className="inline-block mb-2">
-                       <img src="/garage-logo.png" alt="lm" className='w-40' />
+                       <img src="/garage-logo.png" alt="lm" className='w-32 sm:w-40' />
                     </div>
                   </div>
                 </div>
@@ -174,10 +173,10 @@ const ViewInvoice: React.FC = () => {
             </div>
 
             {/* Main Content */}
-            <div className="px-8 py-6">
+            <div className="px-4 sm:px-8 py-6">
               {/* FACTURE Title Box */}
-              <div className="border-4 border-black rounded-lg p-3 text-center mb-6">
-                <h2 className="text-2xl font-bold">FACTURE</h2>
+              <div className="border-4 border-black rounded-lg p-2 sm:p-3 text-center mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">FACTURE</h2>
               </div>
 
               {/* Client Info */}
@@ -187,13 +186,28 @@ const ViewInvoice: React.FC = () => {
 
               {/* Items Table */}
               <div className="mb-6">
-                <table className="w-full border-collapse">
+                {/* Mobile View */}
+                <div className="md:hidden border border-gray-400 rounded-lg overflow-hidden">
+                  {invoice.items.map((item, index) => (
+                    <div key={index} className="bg-gray-100 p-3 border-b border-gray-400 last:border-b-0">
+                      <p className="font-bold">{item.designation}</p>
+                      <div className="grid grid-cols-2 gap-x-2 mt-1 text-sm">
+                        <p className="text-gray-600">QTE</p><p className="text-right">{item.quantity.toString().padStart(2, '0')}</p>
+                        <p className="text-gray-600">P.U.</p><p className="text-right">{formatCurrencyCFA(item.unitPrice).replace(' CFA', '')}</p>
+                        <p className="text-gray-600">Montant</p><p className="text-right">{formatCurrencyCFA(item.amount).replace(' CFA', '')} <sup>F</sup></p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop View */}
+                <table className="hidden md:table w-full border-collapse">
                   <thead>
                     <tr className="bg-gray-200">
                       <th className="border border-gray-400 px-3 py-2 text-left font-bold text-sm">QTE</th>
                       <th className="border border-gray-400 px-3 py-2 text-left font-bold text-sm">DESIGNATION</th>
                       <th className="border border-gray-400 px-3 py-2 text-left font-bold text-sm">PRIX UNIT</th>
-                      <th className="border border-gray-400 px-3 py-2 text-left font-bold text-sm">MONTANT</th>
+                      <th className="border border-gray-400 px-3 py-2 text-right font-bold text-sm">MONTANT</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -202,49 +216,37 @@ const ViewInvoice: React.FC = () => {
                         <td className="border border-gray-400 px-3 py-2 text-sm">{item.quantity.toString().padStart(2, '0')}</td>
                         <td className="border border-gray-400 px-3 py-2 text-sm">{item.designation}</td>
                         <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(item.unitPrice).replace(' CFA', '')}</td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(item.amount).replace(' CFA', '')} <sup>F</sup></td>
+                        <td className="border border-gray-400 px-3 py-2 text-sm text-right">{formatCurrencyCFA(item.amount).replace(' CFA', '')} <sup>F</sup></td>
                       </tr>
                     ))}
-                    
-                    {invoice.deliveryFees > 0 && (
-                      <tr className="bg-gray-100">
-                        <td className="border border-gray-400 px-3 py-2 text-sm"></td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">Frais de livraison</td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(invoice.deliveryFees).replace(' CFA', '')}</td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(invoice.deliveryFees).replace(' CFA', '')} <sup>F</sup></td>
-                      </tr>
-                    )}
-                    
-                    {invoice.laborCost > 0 && (
-                      <tr className="bg-gray-100">
-                        <td className="border border-gray-400 px-3 py-2 text-sm" colSpan={2}>Main d'œuvre</td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(invoice.laborCost).replace(' CFA', '')}</td>
-                        <td className="border border-gray-400 px-3 py-2 text-sm">{formatCurrencyCFA(invoice.laborCost).replace(' CFA', '')} <sup>F</sup></td>
-                      </tr>
-                    )}
-                    
-                    {/* Empty rows for spacing */}
-                    <tr className="bg-gray-100">
-                      <td className="border border-gray-400 px-3 py-2 text-sm h-8" colSpan={4}></td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                      <td className="border border-gray-400 px-3 py-2 text-sm h-8" colSpan={4}></td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                      <td className="border border-gray-400 px-3 py-2 text-sm h-8" colSpan={4}></td>
-                    </tr>
-                    
-                    {/* Total Row */}
-                    <tr className="bg-gray-100">
-                      <td className="border border-gray-400 px-3 py-2 text-sm" colSpan={3}></td>
-                      <td className="border border-gray-400 px-3 py-2 text-sm font-bold">TOTAL</td>
-                    </tr>
-                    <tr className="bg-gray-100">
-                      <td className="border border-gray-400 px-3 py-2 text-sm" colSpan={3}></td>
-                      <td className="border border-gray-400 px-3 py-2 text-base font-bold">{formatCurrencyCFA(invoice.total).replace('F CFA', '')} F CFA</td>
-                    </tr>
                   </tbody>
                 </table>
+              </div>
+
+              {/* Totals */}
+              <div className="flex justify-end mb-6">
+                <div className="w-full md:w-1/2 lg:w-2/5 space-y-2">
+                  {(invoice.deliveryFees > 0 || invoice.laborCost > 0) && (
+                    <div className="border-b border-gray-300 pb-2">
+                      {invoice.deliveryFees > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span>Frais de livraison</span>
+                          <span>{formatCurrencyCFA(invoice.deliveryFees)}</span>
+                        </div>
+                      )}
+                      {invoice.laborCost > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span>Main d'œuvre</span>
+                          <span>{formatCurrencyCFA(invoice.laborCost)}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-lg font-bold">TOTAL</span>
+                    <span className="text-lg font-bold">{formatCurrencyCFA(invoice.total)}</span>
+                  </div>
+                </div>
               </div>
 
               {/* Total in Words */}

@@ -176,62 +176,88 @@ const CreateInvoice: React.FC = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-2 px-3 text-sm font-medium text-gray-700">QTE</th>
-                        <th className="text-left py-2 px-3 text-sm font-medium text-gray-700">DÉSIGNATION</th>
-                        <th className="text-left py-2 px-3 text-sm font-medium text-gray-700">PRIX UNIT</th>
-                        <th className="text-right py-2 px-3 text-sm font-medium text-gray-700">MONTANT</th>
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {fields.map((field, index) => (
-                        <tr key={field.id} className="border-b border-gray-100">
-                          <td className="py-2 px-3">
-                            <input
-                              type="number"
-                              min="1"
-                              {...register(`items.${index}.quantity`, { valueAsNumber: true })}
-                              className="input w-16 text-center"
-                            />
-                          </td>
-                          <td className="py-2 px-3">
-                            <input
-                              type="text"
-                              {...register(`items.${index}.designation`)}
-                              className="input w-full"
-                              placeholder="Désignation de l'article"
-                            />
-                          </td>
-                          <td className="py-2 px-3">
-                            <input
-                              type="number"
-                              min="0"
-                              step="100"
-                              {...register(`items.${index}.unitPrice`, { valueAsNumber: true })}
-                              className="input w-24"
-                            />
-                          </td>
-                          <td className="py-2 px-3 text-right font-mono text-sm">
-                            {formatCurrencyCFA(calculateItemAmount(index))}
-                          </td>
-                          <td className="py-2 px-3">
-                            <button
-                              type="button"
-                              onClick={() => removeItem(index)}
-                              className="p-1 text-red-400 hover:text-red-600"
-                              disabled={fields.length === 1}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="space-y-4">
+                  {/* Header for medium screens and up */}
+                  <div className="hidden md:grid md:grid-cols-12 gap-4 border-b pb-2">
+                    <h3 className="md:col-span-1 text-sm font-medium text-gray-700">QTE</h3>
+                    <h3 className="md:col-span-5 text-sm font-medium text-gray-700">DÉSIGNATION</h3>
+                    <h3 className="md:col-span-2 text-sm font-medium text-gray-700">PRIX UNIT</h3>
+                    <h3 className="md:col-span-2 text-right text-sm font-medium text-gray-700">MONTANT</h3>
+                    <div className="md:col-span-2"></div>
+                  </div>
+
+                  {/* Items */}
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="rounded-lg border md:border-none p-4 md:p-0 md:grid md:grid-cols-12 md:gap-4 md:items-center space-y-2 md:space-y-0">
+                      
+                      {/* Mobile Header */}
+                      <div className="md:hidden flex justify-between items-center">
+                        <h4 className="font-semibold">Article {index + 1}</h4>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(index)}
+                          className="p-1 text-red-400 hover:text-red-600"
+                          disabled={fields.length === 1}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      {/* Quantity */}
+                      <div className="md:col-span-1">
+                        <label className="text-xs text-gray-500 md:hidden">QTE</label>
+                        <input
+                          type="number"
+                          min="1"
+                          {...register(`items.${index}.quantity`, { valueAsNumber: true })}
+                          className="input w-full text-center"
+                        />
+                      </div>
+
+                      {/* Designation */}
+                      <div className="md:col-span-5">
+                        <label className="text-xs text-gray-500 md:hidden">DÉSIGNATION</label>
+                        <textarea
+                          {...register(`items.${index}.designation`)}
+                          className="w-full border border-gray-300 rounded-md p-2"
+                          placeholder="Désignation de l'article"
+                          rows={2}
+                        ></textarea>
+                      </div>
+
+                      {/* Unit Price */}
+                      <div className="md:col-span-2">
+                        <label className="text-xs text-gray-500 md:hidden">PRIX UNIT</label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="100"
+                          {...register(`items.${index}.unitPrice`, { valueAsNumber: true })}
+                          className="input w-full"
+                        />
+                      </div>
+
+                      {/* Amount */}
+                      <div className="md:col-span-2 flex items-center justify-between md:block">
+                        <label className="text-xs text-gray-500 md:hidden">MONTANT</label>
+                        <p className="text-right font-mono text-sm w-full">
+                          {formatCurrencyCFA(calculateItemAmount(index))}
+                        </p>
+                      </div>
+
+                      {/* Remove Button */}
+                      <div className="hidden md:col-span-2 md:flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => removeItem(index)}
+                          className="p-1 text-red-400 hover:text-red-600"
+                          disabled={fields.length === 1}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Frais supplémentaires */}

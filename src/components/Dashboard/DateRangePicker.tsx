@@ -47,15 +47,20 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
       >
         <Calendar className="w-4 h-4" />
-        <span>
+        <span className="hidden sm:inline">
           {dateRange.startDate && dateRange.endDate
             ? `${format(dateRange.startDate, 'dd/MM/yyyy')} - ${format(dateRange.endDate, 'dd/MM/yyyy')}`
             : 'Sélectionner une période'}
         </span>
+        <span className="sm:hidden">
+          {dateRange.startDate && dateRange.endDate
+            ? `${format(dateRange.startDate, 'dd/MM/yy')} - ${format(dateRange.endDate, 'dd/MM/yy')}`
+            : 'Période'}
+        </span>
       </button>
 
       {showPicker && (
-        <div className="absolute right-0 z-50 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4 w-80">
+        <div className="absolute left-0 z-50 mt-2 bg-white border border-gray-300 rounded-md shadow-lg p-4 w-72 sm:w-80">
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -81,7 +86,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               />
             </div>
             
-            <div className="flex gap-2 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2 pt-2">
               <button
                 onClick={clearDates}
                 className="btn btn-outline flex-1"
